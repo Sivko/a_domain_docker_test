@@ -1,0 +1,1 @@
+rsync -avz -e 'ssh -i ~/.ssh/id_rsa' . root@217.114.10.29:/root
