@@ -1,25 +1,38 @@
+version: '3.7'
+
 services:
-  # PHP-FPM сервис
+  # PHP-FPM сервис для бэкенда
   php-fpm:
-    image: php:8.1-fpm # Можно указать другую версию PHP
+    image: php:8.1-fpm
     container_name: php-fpm
     volumes:
-      - ./www:/var/www/html # Папка с вашим кодом
+      - ./www:/var/www/html
     networks:
       - app-network
 
-  # Nginx сервис
-  nginx:
+  # Nginx для PHP
+  nginx-php:
     image: nginx:latest
-    container_name: nginx
+    container_name: nginx-php
     volumes:
-      - ./www:/var/www/html # Папка с вашим кодом
-      - ./nginx.conf:/etc/nginx/nginx.conf # Конфигурация Nginx
-      # - ./sites:/etc/nginx/sites-available # Конфигурация сайтов (опционально)
+      - ./www:/var/www/html
+      - ./nginx.conf:/etc/nginx/nginx.conf  # Используем ваш обновленный nginx.conf
     ports:
-      - "80:80" # Публикуем порт 80 для доступа из браузера
+      - "80:80"  # Публикуем порт 80 для доступа из браузера
     depends_on:
-      - php-fpm # Nginx зависит от PHP-FPM
+      - php-fpm
+      - nextjs-frontend
+    networks:
+      - app-network
+
+  # Next.js фронтенд
+  nextjs-frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile  # Путь к Dockerfile для фронтенда (Next.js)
+    container_name: nextjs-frontend
+    ports:
+      - "3000:3000"  # Публикуем фронтенд на порту 3000
     networks:
       - app-network
 
