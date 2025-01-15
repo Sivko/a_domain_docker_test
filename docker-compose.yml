@@ -6,7 +6,7 @@ services:
     image: php:8.1-fpm
     container_name: php-fpm
     volumes:
-      - ./www:/var/www/html
+      - ./frizar_clear:/var/www/html
     networks:
       - app-network
 
@@ -21,16 +21,16 @@ services:
       - "80:80"  # Публикуем порт 80 для доступа из браузера
     depends_on:
       - php-fpm
-      - nextjs-frontend
+      - frizar_front
     networks:
       - app-network
 
   # Next.js фронтенд
-  nextjs-frontend:
+  frizar_front:
     build:
       context: .
-      dockerfile: frontend/Dockerfile  # Путь к Dockerfile для фронтенда (Next.js)
-    container_name: nextjs-frontend
+      dockerfile: frizar_front/Dockerfile  # Путь к Dockerfile для фронтенда (Next.js)
+    container_name: frizar_front
     ports:
       - "3000:3000"  # Публикуем фронтенд на порту 3000
     networks:
